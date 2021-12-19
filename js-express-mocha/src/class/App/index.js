@@ -1,5 +1,6 @@
 const express = require("express")
 const bodyParser = require("body-parser")
+const IndexRouter = require("../../routes")
 
 module.exports = (database) => {
     class App {
@@ -12,7 +13,7 @@ module.exports = (database) => {
             this.app.set("port", process.env.PORT || 8000)
         }
         routing() {
-            this.app.use("/")
+            this.app.use("/", IndexRouter(this.db).initRoutes())
         }
 
         middlewares() {

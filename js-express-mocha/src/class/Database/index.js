@@ -1,4 +1,6 @@
-const users = require('../../../../data/users.json')
+const users = require('../../../../data/users.json');
+const List = require('../../List/list');
+const uuid = require("uuid")
 
 /* 
     user
@@ -41,14 +43,24 @@ const users = require('../../../../data/users.json')
 class Database {
     constructor() {
         this.lists = new Map();
-        this.users = [...users]
+        this.users = new Map([...users])
     }
 
+    /**
+     * 
+     * @param {string} dataType 
+     * @param {Omit<List, 'listId'>} params 
+     */
     create(dataType, params) {
         const id = this.generateId()
-        this[dataType].set(id, params)
+        this[dataType].set(id, createItem(id, dataType, params))
+        return this[dataType].get(id)
     }
-
+     /**
+     * 
+     * @param {string} dataType 
+     * @param {Omit<List, 'listId'>} params 
+     */
     update(dataType, params) {
         switch (dataType) {
             case 'list':
@@ -58,14 +70,30 @@ class Database {
     }
 
     generateId() {
-
+        return uuid.v4()
     }
 
+    /**
+     * 
+     * @param {"lists" | "users"} dataType 
+     * @param {string | undefined} id 
+     * @returns 
+     */
     find(dataType, id) {
         if(!this[dataType].has(id)) return;
-        return this[dataType].get(id)    
+        return id ? this[dataType].get(id) : [...this[dataType].values() ]   
     }
 
+}
+
+
+function createItem(id, itemType, params) {
+    switch (itemType) {
+        case 'lists':
+            return new List(id, params.name, params.songs)
+        default:
+            break;
+    }
 }
 
 module.exports = Database
