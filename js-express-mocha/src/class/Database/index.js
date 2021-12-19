@@ -91,8 +91,6 @@ function createItem(id, itemType, params) {
     switch (itemType) {
         case 'lists':
             return new List(id, params.name, params.songs)
-        default:
-            break;
     }
 }
 
