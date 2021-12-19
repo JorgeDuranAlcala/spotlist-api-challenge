@@ -1,0 +1,19 @@
+{
+  "name": "spotlist-api",
+  "version": "1.0.0",
+  "description": "a challenge for the rviewer codeathon",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JorgeDuranAlcala/spotlist-api-challenge.git"
+  },
+  "author": "Jorge Duran",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JorgeDuranAlcala/spotlist-api-challenge/issues"
+  },
+  "homepage": "https://github.com/JorgeDuranAlcala/spotlist-api-challenge#readme"
+}
