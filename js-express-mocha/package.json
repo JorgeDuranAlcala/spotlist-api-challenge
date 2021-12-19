@@ -7,15 +7,20 @@
     "doc": "doc"
   },
   "scripts": {
-    "test": "mocha src/test",
+    "test": "jest src",
     "integration": "cypress run"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.1",
     "chai": "^4.3.3",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mocha": "^8.3.1"
+    "jest": "^27.4.5",
+    "mocha": "^8.3.1",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "cypress": "^7.1.0"
