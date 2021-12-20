@@ -13,6 +13,7 @@ module.exports = (db) => {
     
         initRoutes() {
             this.router.get("/users/:userid/lists" , userMiddleware(db), this.listController.getAllLists)
+            this.router.post("/users/:userid/lists", userMiddleware(db) , this.listController.addNewList)
             return this.router
         }
     }

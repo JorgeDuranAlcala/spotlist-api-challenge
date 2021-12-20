@@ -16,16 +16,19 @@ module.exports = (db) => {
            // this.listService = createList(db)
         }
         getAllLists(req, res) {
-                /* const user = db.find('users', req.params.userid)
-                const lists = this.listService.getLists(user) */
-                //const lists = userService(db, req.user)
-                console.log(req.user)
                 const lists = listService.getLists(req.user)
                 return res.status(200).send(lists)
         }
 
-        addNewList() {
-
+        /**
+         * 
+         * @param {Request} req 
+         * @param {Response} res 
+         */
+        addNewList(req, res) {
+            if(!req.body.list || !req.body.list.name) return res.status(400).send(new Error("Invalid params"));
+            const newList = listService.addList(req.body)
+            return res.status(200).send(newList)
         }
     }
 

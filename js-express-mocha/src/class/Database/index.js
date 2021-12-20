@@ -110,7 +110,7 @@ class Database {
  * @param {string} id 
  * @param {string} itemType 
  * @param {Omit<List, "listId"> | Song} itemData
- * @returns 
+ * @returns {void}
  */
 function createItem(itemType, itemData, id) {
     switch (itemType) {
