@@ -1,14 +1,28 @@
 
 
-class ListService {
+module.exports = (db) => {
 
-    constructor(db) {
-        this.db = db
+    class ListService {
+            
+            getLists(user) 
+            {   
+                const listIds = user.lists
+                const lists = db.find("lists")
+                return lists.filter(list => listIds.includes(list.listId))
+            }
+
+            getListById(user, listId)
+            {
+                const list = user.lists.find(id => id === listId)
+                return this.db.find('lists', list)
+            }
+            
+            addList(data) 
+            {
+                
+            }
     }
 
-    getLists() {
-        this.db.findData("lists")
-    }
+    return new ListService()
+
 }
-
-module.exports = ListService

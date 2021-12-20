@@ -1,6 +1,8 @@
 const users = require('../../../../data/users.json');
 const List = require('../../List/list');
-const uuid = require("uuid")
+const uuid = require("uuid");
+const Song = require('../../song/song');
+const User = require('../../User/user');
 
 /* 
     user
@@ -43,7 +45,7 @@ const uuid = require("uuid")
 class Database {
     constructor() {
         this.lists = new Map();
-        this.users = new Map([...users])
+        this.users = this.getUsersData()
     }
 
     /**
@@ -53,7 +55,7 @@ class Database {
      */
     create(dataType, params) {
         const id = this.generateId()
-        this[dataType].set(id, createItem(id, dataType, params))
+        this[dataType].set(id, createItem(dataType, params, id))
         return this[dataType].get(id)
     }
      /**
@@ -61,16 +63,32 @@ class Database {
      * @param {string} dataType 
      * @param {Omit<List, 'listId'>} params 
      */
-    update(dataType, params) {
-        switch (dataType) {
+    update(dataType, id, params) {
+       this[dataType].set(id, params)
+       /*  switch (dataType) {
             case 'list':
               this.lists.get(params.id).songs.push(params.song)
             break;
-        }
+            case 'user':
+                this.users.set(params.id, params)
+        } */
     }
 
     generateId() {
         return uuid.v4()
+    }
+
+    /**
+     * 
+     * @returns {Map<string, typeof users[0]>}
+     */
+    getUsersData() {
+        const usersMap = new Map()
+        users.forEach((user) => {
+            const newUser = new User(user.id, user.name, user.password)
+            usersMap.set(newUser.id, newUser)
+        })
+        return usersMap
     }
 
     /**
@@ -80,18 +98,27 @@ class Database {
      * @returns 
      */
     find(dataType, id) {
-        if(!this[dataType].has(id)) return;
+        if(id && !this[dataType].has(id)) return;
         return id ? this[dataType].get(id) : [...this[dataType].values() ]   
     }
 
 }
 
 
-function createItem(id, itemType, params) {
+/**
+ * 
+ * @param {string} id 
+ * @param {string} itemType 
+ * @param {Omit<List, "listId"> | Song} itemData
+ * @returns 
+ */
+function createItem(itemType, itemData, id) {
     switch (itemType) {
         case 'lists':
-            return new List(id, params.name, params.songs)
+            return new List(id, itemData.name, itemData.songs);
+        case 'song':
+            return new Song(itemData.title, itemData.artist)
     }
 }
 
-module.exports = Database
+module.exports = { createItem, Database}

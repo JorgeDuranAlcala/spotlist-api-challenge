@@ -1,5 +1,5 @@
 const appCreator = require(".")
-const Database = require("../Database")
+const {Database} = require("../Database")
 
 describe("App creator", () => {
 

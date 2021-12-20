@@ -1,4 +1,4 @@
-const Database = require(".");
+const {Database} = require(".");
 //jest.mock(".")
 /* jest.mock(".", () => ({
     update: jest.fn(),
@@ -22,13 +22,26 @@ describe('Database class', () => {
         expect(myList.name).toEqual(mockListData.name)
         expect(myList.listId).toBeDefined()
         expect(myList.songs.length).toEqual(0)
-        console.log(db)
     })
-    test('should find', () => {
-        expect(1).toEqual(1)
+    test('should find a list by id', () => {
+        const mockListData = {
+            name: "list1"
+        }
+        const my_list = db.create('lists', mockListData)
+        const list = db.find("lists", my_list.listId)
+        expect(list).toBeDefined()
+        expect(list).toEqual(my_list)
+    })
+    test('should find a list by id', () => {
+        const mockListDataOne = { name: "list1"}
+        const mockListDataTwo = { name: "list2"}
+        db.create('lists', mockListDataOne)
+        db.create('lists', mockListDataTwo)
+        const lists = db.find("lists")
+        expect(lists).toBeInstanceOf(Array)
+        expect(lists.length).toEqual(2)
     })
     test('should update a list appending a new to it', () => {
-        
         expect(1).toEqual(1)
     })
     test('should gen an random id', () => {

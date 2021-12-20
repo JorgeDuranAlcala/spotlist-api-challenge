@@ -7,6 +7,9 @@ module.exports = (database) => {
         constructor() {
              this.db = database
              this.app = express()
+             this.settings()
+             this.middlewares()
+             this.routing()
         }
 
         settings() {
@@ -17,7 +20,7 @@ module.exports = (database) => {
         }
 
         middlewares() {
-            this.app.use()
+            this.app.use(express.json())
             this.app.use(bodyParser.urlencoded({extended: false}))
         }
     }
