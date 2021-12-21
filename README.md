@@ -1,3 +1,9 @@
+# Documentation
+
+# how to use the api
+
+# External dependencies
+
 # Spotlist Challenge
 
 Spotlist is a new indie music company that aims to provide better relationships with small artists.
