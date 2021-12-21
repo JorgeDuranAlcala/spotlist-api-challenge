@@ -1,6 +1,6 @@
 # SpotList API
 
-potlistAPI is an API that enables you to get and create lists of songs as well as get songs lists from other users and even get a single song from 
+potlistAPI is an API that enables you to get and create lists of songs as well as get songs lists from other users and even add songs to 
 a given user list very easily.
 
 ## Installation
