@@ -1,6 +1,9 @@
 const express = require("express")
 const bodyParser = require("body-parser")
 const IndexRouter = require("../../routes")
+const morgan = require("morgan")
+const cors = require("cors")
+const compression = require("compression")
 const { logErrorMiddleware, returnError } = require("../../Error/error-handler")
 
 module.exports = (database) => {
@@ -21,10 +24,13 @@ module.exports = (database) => {
             if(!process.env === 'testing') this.app.use(logErrorMiddleware)
             this.app.use(returnError)
         }
-
+        
         middlewares() {
             this.app.use(express.json())
             this.app.use(bodyParser.urlencoded({extended: false}))
+            this.app.use(morgan('dev'))
+            this.app.use(cors())
+            this.app.use(compression())
         }
     }
     return new App()

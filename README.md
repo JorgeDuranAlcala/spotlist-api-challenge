@@ -1,8 +1,93 @@
-# Documentation
+# SpotList API
 
-# how to use the api
+potlistAPI is an API that enables you to get and create lists of songs as well as get songs lists from other users and even get a single song from 
+a given user list very easily.
 
-# External dependencies
+## Installation
+
+Use the node package manager [node.js](https://nodejs.org/en/) to install SpotList API.
+
+```bash
+cd js-express-mocha
+npm install
+```
+
+## Initialization
+``` bash
+  npm start
+```
+## Running tests
+```bash
+  npm run test
+```
+
+## External dependencies
+   - body-parser
+   - compression 
+   - cors
+   - jest
+   - morgan
+   - supertest
+   - uuid
+
+
+## Usage
+
+### important notes
+the domain-name when you run it on your local-machine (your computer) is by default http://localhost:8000. Moreover to be able to use all of this endpoints you need to provide a basic authentication in the header of the request. 
+
+Here you can find further information [Authorization](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers)
+
+### Get a specific list
+where userid is a users id and listid is a lists id
+```bash
+/GET "[domain-name]/users/:userid/lists/:listid"
+```
+### Get all list made by a user
+where userid could be any user's id
+```bash
+/GET "[domain-name]/users/:userid/lists"
+```
+### Important note
+To make POST request to SpotList API you need to pass a body in the request here you can find further reading [HTTP - POST](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST)
+
+### Add a new list
+#### Body format
+```javascript
+ body: {
+   list: {
+     name: "my-list-name"
+   }
+}
+```
+#### Body format with songs
+```javascript
+ body: {
+   list: {
+     name: "my-list-name",
+     songs: [
+       {title:'song-title', artist: 'artist-name'},
+       {title:'song-title', artist: 'artist-name'}
+     ]
+   }
+}
+```
+``` bash
+/POST "[domain-name]/users/:userid/lists"
+```
+### add a new song to a list
+
+#### Body format
+```javascript
+ body: {
+   title: 'song-title',
+   artist: 'artist-name'
+}
+```
+
+```bash
+/POST "[domain-name]/users/:userid/lists/:listid/songs",
+```
 
 # Spotlist Challenge
 
