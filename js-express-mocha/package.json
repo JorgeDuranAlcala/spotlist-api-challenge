@@ -9,7 +9,8 @@
   "scripts": {
     "test": "jest src",
     "integration": "cypress run",
-    "test:coverage": "npm test -- --coverage"
+    "test:coverage": "npm test -- --coverage",
+    "test:watch": "npm test -- --watchAll"
   },
   "author": "",
   "license": "ISC",

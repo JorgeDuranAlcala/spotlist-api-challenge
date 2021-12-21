@@ -1,34 +1,59 @@
+const HTTP_STATUS_CODE = require("../constants/http-status-code");
+const api400Error = require("../Error/400-error");
+const api404Error = require("../Error/404-error");
 const createListService = require("./listService")
-
-function userService(db, user)
-{
-    const listIds = user.lists;
-    return !listIds ? [] : listIds.map(id => sdb.find('lists', id))
-    return []
-}
 
 module.exports = (db) => {
     
     const listService = createListService(db)
 
     class ListController {
-        constructor() {
-           // this.listService = createList(db)
-        }
+        /**
+         * 
+         * @param {Express.Request} req 
+         * @param {Express.Response} res 
+         * @param {Function} next
+         */
         getAllLists(req, res) {
-                const lists = listService.getLists(req.user)
-                return res.status(200).send(lists)
+                try {
+                    const lists = listService.getLists(req.user)
+                    return res.status(HTTP_STATUS_CODE.OK).send(lists)
+                } catch (error) {
+                    next(error)
+                }
         }
 
         /**
          * 
-         * @param {Request} req 
-         * @param {Response} res 
+         * @param {Express.Request} req 
+         * @param {Express.Response} res 
+         * @param {Function} next
          */
-        addNewList(req, res) {
-            if(!req.body.list || !req.body.list.name) return res.status(400).send(new Error("Invalid params"));
-            const newList = listService.addList(req.body)
-            return res.status(200).send(newList)
+        addNewList(req, res, next) {
+            try {
+                if(!req.body.list || !req.body.list.name) throw new api400Error("bad params")
+                const newList = listService.addList(req.user, req.body.list)
+                return res.status(HTTP_STATUS_CODE.OK).send(newList)
+            } catch (error) {
+                next(error)
+            }
+        }
+
+        /**
+         * 
+         * @param {Express.Request} req 
+         * @param {Express.Response} res 
+         * @param {Function} next
+         */
+        getListById(req, res, next) {
+            try {
+                if(!req.params.listid) throw new api400Error("listid is missing")
+                const myList = listService.getListById(req.user, req.params.listid)
+                if(!myList) throw new api404Error(`list with ID: ${req.params.listid} not found`);
+                return res.status(HTTP_STATUS_CODE.OK).send(myList)
+            } catch (error) {
+                next(error)
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 const express = require("express")
 const bodyParser = require("body-parser")
 const IndexRouter = require("../../routes")
+const { logErrorMiddleware, returnError } = require("../../Error/error-handler")
 
 module.exports = (database) => {
     class App {
@@ -17,6 +18,8 @@ module.exports = (database) => {
         }
         routing() {
             this.app.use("/", IndexRouter(this.db).initRoutes())
+            if(!process.env === 'testing') this.app.use(logErrorMiddleware)
+            this.app.use(returnError)
         }
 
         middlewares() {

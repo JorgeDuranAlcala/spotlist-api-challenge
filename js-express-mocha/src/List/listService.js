@@ -14,12 +14,14 @@ module.exports = (db) => {
             getListById(user, listId)
             {
                 const list = user.lists.find(id => id === listId)
-                return db.find('lists', list.listId)
+                return db.find('lists', list)
             }
             
-            addList({list:dataList}) 
+            addList(user, dataList) 
             {
-                return db.create('lists', dataList)    
+                const mylist = db.create('lists', dataList)
+                const userUpdated = db.update('users', user.id, {...user, lists: [...user.lists, mylist.listId]});
+                return mylist
             }
     }
 

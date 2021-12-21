@@ -61,19 +61,18 @@ class Database {
      /**
      * 
      * @param {string} dataType 
-     * @param {Omit<List, 'listId'>} params 
+     * @param {List | User} params 
+     * @returns {List | User}
      */
     update(dataType, id, params) {
        this[dataType].set(id, params)
-       /*  switch (dataType) {
-            case 'list':
-              this.lists.get(params.id).songs.push(params.song)
-            break;
-            case 'user':
-                this.users.set(params.id, params)
-        } */
+       return this[dataType].get(id)
     }
 
+    /**
+     * 
+     * @returns {string}
+     */
     generateId() {
         return uuid.v4()
     }
@@ -95,11 +94,27 @@ class Database {
      * 
      * @param {"lists" | "users"} dataType 
      * @param {string | undefined} id 
-     * @returns 
+     * @returns {User[] | List[]}
      */
     find(dataType, id) {
-        if(id && !this[dataType].has(id)) return;
+        //if(!id && !this[dataType].has(id)) return;
         return id ? this[dataType].get(id) : [...this[dataType].values() ]   
+    }
+
+   /**
+     * 
+     * @param {"lists" | "users"} dataType 
+     * @param {string} id 
+     * @returns {boolean}
+     */
+    delete(datatype, id)
+    {
+        return this[datatype].delete(id)
+    }
+
+    drop(datatype)
+    {
+        return this[datatype] = new Map()
     }
 
 }

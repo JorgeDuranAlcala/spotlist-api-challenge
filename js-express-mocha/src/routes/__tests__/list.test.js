@@ -2,10 +2,14 @@ const supertest = require("supertest")
 
 const createApp = require("../../class/App")
 const { Database } = require("../../class/Database")
-const { app } = createApp(new Database())
+const { app, db } = createApp(new Database())
 const request = supertest(app)
-const users = require("../../../../data/users.json")
+//const users = require("../../../../data/users.json")
+const userService = require("../../User/userService")(db)
+const users = userService.getAllUsers()
 const user = users[1]
+
+process.env = "testing"
 
 const addListsPayload = {
     list: {
@@ -22,6 +26,11 @@ const addListsPayload = {
         ]
     }
 }
+
+afterAll(() => {
+    db.drop("lists")
+    db.drop("users")
+})
 
 
 describe('/users/:userId/lists', () => {
@@ -92,17 +101,63 @@ describe('/users/:userId/lists', () => {
 })
 
 describe('/users/:userid/lists/:listid', () => {
-    beforeEach((done) => {
-        request
-            .post(`/users/${user['id']}/lists`)
-            .send(addListsPayload)
-            .auth(user['name'], user['password'])
-            .then(response => {
-                addListsPayload.list.listId = response.body.listId
-                done()
-            })
-            .catch(console.error)
+    const addListsPayload = {
+        list: {
+            name: 'list1',
+            songs: [
+                {
+                    artist: "artist1",
+                    title : "title1"
+                },
+                {
+                    artist: "artist2",
+                    title: "title2"
+                }
+            ]
+        }
+    }
+
+    const users = userService.getAllUsers()
+    const my_user = users[1] 
+    beforeEach(async () => {
+        const res = await request
+                            .post(`/users/${my_user['id']}/lists`)
+                            .send(addListsPayload)
+                            .auth(my_user['name'], my_user['password'])
+        addListsPayload.list.listId = res.body.listId
     })
+
+
+    test('GET - should return a list', async () => {
+        const listId = addListsPayload.list.listId
+        const res = await request
+                            .get(`/users/${my_user['id']}/lists/${listId}`)
+                            .auth(my_user['name'], my_user['password'])
+
+        expect(res.statusCode).toEqual(200)
+        expect(res.body).toEqual(addListsPayload.list)
+    })
+
+    test('GET - should return 401 access denied', async () => {
+        const listId = addListsPayload.list.listId
+        const res = await request
+                            .get(`/users/${my_user['id']}/lists/${listId}`)
+                            .auth(my_user['name'], "123343ddsd")
+
+            expect(res.statusCode).toEqual(401)
+    })
+
+    test('GET - should return 401 when the given userid doesnt belong to the user authenticated', async () => {
+        const listId = addListsPayload.list.listId
+        const res = await request
+                            .get(`/users/12434444/lists/${listId}`)
+                            .auth(my_user['name'], my_user['password'])
+
+            expect(res.statusCode).toEqual(401)
+
+    })
+    
+    
 })
 
 
