@@ -19,8 +19,9 @@ module.exports = (db) => {
             
             addList(user, dataList) 
             {
+                dataList.songs = dataList.songs.map(song => db.create("songs", song))
                 const mylist = db.create('lists', dataList)
-                const userUpdated = db.update('users', user.id, {...user, lists: [...user.lists, mylist.listId]});
+                db.update('users', user.id, {...user, lists: [...user.lists, mylist.listId]});
                 return mylist
             }
     }

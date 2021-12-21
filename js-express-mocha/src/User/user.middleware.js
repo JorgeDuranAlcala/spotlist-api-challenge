@@ -1,5 +1,6 @@
 const ErrorUnauthorized = require("../Error/401-error")
 const api404Error = require("../Error/404-error")
+const { decrypt } = require("../libraries/encrypt/encrypt")
 
 module.exports = db => {
     return function userMiddleware(req, res, next) {
@@ -10,7 +11,9 @@ module.exports = db => {
             const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
             const strauth = Buffer.from(b64auth, 'base64').toString()
             const [_, login, password] = strauth.match(/(.*?):(.*)/) || []
-            if(user.name !== login || user.password !== password || !login || !password) throw new ErrorUnauthorized(`user is not the one authenticated`)
+            const decrypted = decrypt(user.password, 20)
+
+            if(user.name !== login || decrypted !== password || !login || !password) throw new ErrorUnauthorized(`user is not the one authenticated`)
             req.user = user
             return next()
         } catch(err) {

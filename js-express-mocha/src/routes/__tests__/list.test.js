@@ -43,7 +43,7 @@ describe('/users/:userId/lists', () => {
 
         expect(res.statusCode).toEqual(200)
         expect(res.body.listId).toBeDefined()
-        expect(res.body.songs).toEqual(addListsPayload.list.songs)
+        expect(res.body.songs.length).toEqual(2)
     })
 
     test('POST - should return 401 access denied', async () => {
@@ -117,7 +117,7 @@ describe('/users/:userid/lists/:listid', () => {
         }
     }
 
-    const users = userService.getAllUsers()
+    //const users = userService.getAllUsers()
     const my_user = users[1] 
     beforeEach(async () => {
         const res = await request
@@ -135,7 +135,8 @@ describe('/users/:userid/lists/:listid', () => {
                             .auth(my_user['name'], my_user['password'])
 
         expect(res.statusCode).toEqual(200)
-        expect(res.body).toEqual(addListsPayload.list)
+        expect(res.body.name).toEqual(addListsPayload.list.name)
+        expect(res.body.songs.length).toEqual(2)
     })
 
     test('GET - should return 401 access denied', async () => {

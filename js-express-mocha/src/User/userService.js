@@ -1,9 +1,10 @@
+const users = require("../../../data/users.json")
 
-module.exports = (db) => {
+module.exports = () => {
     class UserService {
 
         getAllUsers() {
-            return db.find('users')
+            return users
         }
     }
 

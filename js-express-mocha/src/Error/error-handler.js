@@ -1,5 +1,5 @@
 function logError (err) {
-    console.error(err)
+     console.error(err)
    }
    
    function logErrorMiddleware (err, req, res, next) {

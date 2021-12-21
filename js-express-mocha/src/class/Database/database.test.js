@@ -29,6 +29,37 @@ describe('Database class', () => {
         expect(myList.listId).toBeDefined()
         expect(myList.songs.length).toEqual(0)
     })
+
+    test('should add a new song to db', () => {
+        const mockSong = {
+            title: "list1",
+            artist: "artist-name"
+        }
+        const song = db.create('songs', mockSong)
+        expect(song.title).toEqual(mockSong.title)
+        expect(song.artist).toEqual(mockSong.artist)
+        expect(song.id).toBeDefined()
+    })
+    test('should add a list with several songs', () => {
+        const mockListData = {
+            name: "list1",
+            songs: [
+                {
+                    title: "list1",
+                    artist: "artist-name"
+                },
+                {
+                    title: "list1",
+                    artist: "artist-name"
+                }
+            ]
+        }
+        mockListData.songs = mockListData.songs.map(song => db.create('songs', song))
+        const list = db.create("lists", mockListData)
+        expect(list.name).toEqual(mockListData.name)
+        expect(list.listId).toBeDefined()
+        expect(list.songs.length).toEqual(2)
+    })
     test('should find a list by id', () => {
         const mockListData = {
             name: "list1"

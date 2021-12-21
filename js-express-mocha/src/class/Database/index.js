@@ -3,6 +3,7 @@ const List = require('../../List/list');
 const uuid = require("uuid");
 const Song = require('../../song/song');
 const User = require('../../User/user');
+const { encrypt } = require('../../libraries/encrypt/encrypt');
 
 /* 
     user
@@ -29,6 +30,7 @@ const User = require('../../User/user');
      lists[listId] = {id, name, songs}
 
      list: {
+            id
             songs: [
                 {
                     artist: "artist1",
@@ -40,12 +42,18 @@ const User = require('../../User/user');
                 }
             ]
         }
+
+        list songs["23", "2323", "2323"]
+        -- songs Map
+        "23" => song
+        "2323" => song
 */
 
 class Database {
     constructor() {
         this.lists = new Map();
-        this.users = this.getUsersData()
+        this.users = this.serializeUsersData()
+        this.songs = new Map()
     }
 
     /**
@@ -81,10 +89,10 @@ class Database {
      * 
      * @returns {Map<string, typeof users[0]>}
      */
-    getUsersData() {
+    serializeUsersData() {
         const usersMap = new Map()
         users.forEach((user) => {
-            const newUser = new User(user.id, user.name, user.password)
+            const newUser = new User(user.id, user.name, encrypt(user.password, 20))
             usersMap.set(newUser.id, newUser)
         })
         return usersMap
@@ -131,8 +139,8 @@ function createItem(itemType, itemData, id) {
     switch (itemType) {
         case 'lists':
             return new List(id, itemData.name, itemData.songs);
-        case 'song':
-            return new Song(itemData.title, itemData.artist)
+        case 'songs':
+            return new Song(id, itemData.title, itemData.artist)
     }
 }
 
